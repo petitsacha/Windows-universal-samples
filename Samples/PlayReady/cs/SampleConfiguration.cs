@@ -27,7 +27,7 @@ namespace SDKTemplate
             new Scenario() { Title="Secure Stop", ClassType=typeof(Scenario4_SecureStop)}
         };
 
-        public static string SampleMovieURL = "http://profficialsite.origin.mediaservices.windows.net/c51358ea-9a5e-4322-8951-897d640fdfd7/tearsofsteel_4k.ism/manifest(format=mpd-time-csf)";
+        public static string SampleMovieURL = "http://profficialsite.originmodif.mediaservices.windows.net/c51358ea-9a5e-4322-8951-897d640fdfd7/tearsofsteel_4k.ism/manifest(format=mpd-time-csf)";
     }
 
     public class Scenario

@@ -1,4 +1,4 @@
-﻿//*********************************************************
+//*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -114,7 +114,7 @@ namespace SDKTemplate.ViewModels
         void GetLicense(Guid kid)
         {
             var laURL = new Uri(licenseUrl);
-            var customData = "token:12345";
+            var customData = "token:12345"; //token SACHA
             var contentHeader =  new PlayReadyContentHeader(kid, "", PlayReadyEncryptionAlgorithm.Aes128Ctr, laURL, laURL, customData, Guid.Empty);
             PlayReadyHelpers.ProactiveLicenseAcquisition(contentHeader, () => {
                 CmdPlayMovie.RaiseCanExecuteChanged();

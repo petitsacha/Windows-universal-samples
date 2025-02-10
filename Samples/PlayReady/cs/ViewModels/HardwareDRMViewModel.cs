@@ -1,4 +1,4 @@
-﻿//*********************************************************
+//*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -20,8 +20,8 @@ namespace SDKTemplate.ViewModels
 
     public class HardwareDRMViewModel : ViewModelBase
     {
-        private string moviePath = MainPage.SampleMovieURL;
-        private string licenseUrl = "http://playready.directtaps.net/pr/svc/rightsmanager.asmx?PlayRight=1&SecurityLevel=2000";
+        private string moviePath = MainPage.SampleMovieURL; // sacha stream URL
+        private string licenseUrl = "http://playready.directtaps.net/pr/svc/rightsmanager.asmx?PlayRight=1&SecurityLevel=2000"; // Sacha license
 
         public RelayCommand CmdUseHardware { get; private set; }
         public RelayCommand CmdUseSoftware { get; private set; }
