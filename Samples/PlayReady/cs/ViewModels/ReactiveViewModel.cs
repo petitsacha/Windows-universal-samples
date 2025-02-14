@@ -1,4 +1,4 @@
-﻿//*********************************************************
+//*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -13,6 +13,7 @@ using SDKTemplate.Shared;
 using System;
 using Windows.Media.Protection;
 using Windows.Media.Protection.PlayReady;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 
@@ -22,7 +23,7 @@ namespace SDKTemplate.ViewModels
     {
         // The sample is a protected H264 Dash (OnDemand) asset.  
         private string moviePath = MainPage.SampleMovieURL;
-        private string licenseURL = "http://playready.directtaps.net/pr/svc/rightsmanager.asmx?UseSimpleNonPersistentLicense=1";
+        private string licenseURL = MainPage.LicenceURL;
 
         public RelayCommand CmdPlayMovie { get; private set; }
         public RelayCommand CmdStopMovie { get; private set; }
@@ -55,13 +56,24 @@ namespace SDKTemplate.ViewModels
             /// hard Stop() on the playback, a new license will be requested on Play(). 
             CmdStopMovie = new RelayCommand(() => { mediaElement.Stop(); SetPlaybackEnabled(false); });
 
+            mediaElement.MediaFailed += OnMediaFailed;
+//            mediaElement.
+
+
             mediaElement.CurrentStateChanged += (s, a) => {
                 ViewModelBase.Log("Media State::" + mediaElement.CurrentState);
             };
 
             mediaElement.MediaFailed += (s, a) => {
+
                 ViewModelBase.Log("Err::" + a.ErrorMessage);
             };
+        }
+
+        private void OnMediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            // Log the sender to see who triggered the event
+            ViewModelBase.Log("Err::" +"MediaFailed event triggered by: "+sender+"");
         }
 
 

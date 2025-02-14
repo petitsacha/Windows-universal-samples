@@ -25,7 +25,7 @@ namespace SDKTemplate.ViewModels
         // The content assocated with the above KeyId
         private string moviePath = MainPage.SampleMovieURL;
         // The following test license service will return a persistent license with a MaxResDecode policy set
-        private string licenseUrl = "http://playready.directtaps.net/pr/svc/rightsmanager.asmx?PlayRight=1&SecurityLevel=2000&MaxResDecode=1920x1080";
+        private string licenseUrl = "https://cl11.anycast.nagra.com/PLAYREADY/prls/contentlicenseservice/v1/licenses";
 
         public RelayCommand CmdGetLicense { get; private set; }
         public RelayCommand CmdPlayMovie { get; private set; }
@@ -114,7 +114,9 @@ namespace SDKTemplate.ViewModels
         void GetLicense(Guid kid)
         {
             var laURL = new Uri(licenseUrl);
-            var customData = "token:12345"; //token SACHA
+            String contentAuthZToken = MainPage.Token;
+                var customData = "token:" + contentAuthZToken; //token SACHA
+
             var contentHeader =  new PlayReadyContentHeader(kid, "", PlayReadyEncryptionAlgorithm.Aes128Ctr, laURL, laURL, customData, Guid.Empty);
             PlayReadyHelpers.ProactiveLicenseAcquisition(contentHeader, () => {
                 CmdPlayMovie.RaiseCanExecuteChanged();
