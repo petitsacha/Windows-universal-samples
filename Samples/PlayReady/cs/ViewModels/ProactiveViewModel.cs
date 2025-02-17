@@ -25,7 +25,7 @@ namespace SDKTemplate.ViewModels
         // The content assocated with the above KeyId
         private string moviePath = MainPage.SampleMovieURL;
         // The following test license service will return a persistent license with a MaxResDecode policy set
-        private string licenseUrl = "https://cl11.anycast.nagra.com/PLAYREADY/prls/contentlicenseservice/v1/licenses";
+        private string licenseUrl = MainPage.LicenceURL;
 
         public RelayCommand CmdGetLicense { get; private set; }
         public RelayCommand CmdPlayMovie { get; private set; }
