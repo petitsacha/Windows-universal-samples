@@ -115,7 +115,8 @@ namespace SDKTemplate.ViewModels
         {
             var laURL = new Uri(licenseUrl);
             String contentAuthZToken = MainPage.Token;
-                var customData = "token:" + contentAuthZToken; //token SACHA
+            String tokenHeaderKey = MainPage.HeaderToken;
+            var customData = tokenHeaderKey+ ":" + contentAuthZToken; //token SACHA
 
             var contentHeader =  new PlayReadyContentHeader(kid, "", PlayReadyEncryptionAlgorithm.Aes128Ctr, laURL, laURL, customData, Guid.Empty);
             PlayReadyHelpers.ProactiveLicenseAcquisition(contentHeader, () => {

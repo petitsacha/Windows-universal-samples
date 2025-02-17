@@ -57,7 +57,7 @@ namespace SDKTemplate.ViewModels
             CmdStopMovie = new RelayCommand(() => { mediaElement.Stop(); SetPlaybackEnabled(false); });
 
             mediaElement.MediaFailed += OnMediaFailed;
-//            mediaElement.
+          //  MinConfig(mediaElement);
 
 
             mediaElement.CurrentStateChanged += (s, a) => {
