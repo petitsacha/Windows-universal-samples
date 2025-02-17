@@ -11,6 +11,7 @@
 
 using SDKTemplate.Shared;
 using System;
+using System.Text.RegularExpressions;
 using Windows.Media.Protection;
 using Windows.Media.Protection.PlayReady;
 using Windows.UI.Xaml;
@@ -73,7 +74,18 @@ namespace SDKTemplate.ViewModels
         private void OnMediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
             // Log the sender to see who triggered the event
+            String error = ExtractErrorCode(e);
+            ViewModelBase.Log("Err::" + error);
+
             ViewModelBase.Log("Err::" +"MediaFailed event triggered by: "+sender+"");
+
+        }
+
+        private String ExtractErrorCode(ExceptionRoutedEventArgs e)
+        {
+            string pattern = @"0x.{8}";
+            MatchCollection matches = Regex.Matches(e.ErrorMessage, pattern);
+            return matches[0].ToString();
         }
 
 
@@ -88,6 +100,7 @@ namespace SDKTemplate.ViewModels
             serviceCompletionNotifier = srEvent.Completion;
             IPlayReadyServiceRequest serviceRequest = (IPlayReadyServiceRequest)srEvent.Request;
             ViewModelBase.Log(serviceRequest.GetType().Name);
+
             ProcessServiceRequest(serviceRequest);
         }
 
@@ -109,8 +122,14 @@ namespace SDKTemplate.ViewModels
             {
                 var licenseRequest = serviceRequest as PlayReadyLicenseAcquisitionServiceRequest;
                 // The inital service request url was taken from the playready header from the dash manifest.
-                // This can overridden to a different license service prior to sending the request (staging, production,...). 
+                // This can overridden to a different license service prior to sending the request (staging, production,...).
                 licenseRequest.Uri = new Uri(licenseURL);
+                String contentAuthZToken = MainPage.Token;
+                String tokenHeaderKey = MainPage.HeaderToken;
+                var customData = tokenHeaderKey + ":" + contentAuthZToken;
+                //licenseRequest.ContentHeader.CustomAttributes = customData;
+
+
 
                 PlayReadyHelpers.ReactiveLicenseAcquisition(licenseRequest,  serviceCompletionNotifier);
                 SetPlaybackEnabled(true);
