@@ -100,8 +100,10 @@ namespace SDKTemplate.ViewModels
             serviceCompletionNotifier = srEvent.Completion;
             IPlayReadyServiceRequest serviceRequest = (IPlayReadyServiceRequest)srEvent.Request;
             ViewModelBase.Log(serviceRequest.GetType().Name);
+            //Adding custom http header
 
-            ProcessServiceRequest(serviceRequest);
+
+              ProcessServiceRequest(serviceRequest);
         }
 
         /// <summary>
@@ -115,23 +117,17 @@ namespace SDKTemplate.ViewModels
             //Alternatively the serviceRequest can be determined by the Guid serviceRequest.Type
             if (serviceRequest is PlayReadyIndividualizationServiceRequest)
             {
-               PlayReadyHelpers.ReactiveIndividualization(serviceRequest as PlayReadyIndividualizationServiceRequest, serviceCompletionNotifier, () => PlayReadyInfo.RefreshStatics());
-               PlayReadyInfo.RefreshStatics();
+                PlayReadyHelpers.ReactiveIndividualization(serviceRequest as PlayReadyIndividualizationServiceRequest, serviceCompletionNotifier, () => PlayReadyInfo.RefreshStatics());
+                PlayReadyInfo.RefreshStatics();
             }
             else if (serviceRequest is PlayReadyLicenseAcquisitionServiceRequest)
             {
                 var licenseRequest = serviceRequest as PlayReadyLicenseAcquisitionServiceRequest;
                 // The inital service request url was taken from the playready header from the dash manifest.
-                // This can overridden to a different license service prior to sending the request (staging, production,...).
+                // This can overridden to a different license service prior to sending the request (staging, production,...). 
                 licenseRequest.Uri = new Uri(licenseURL);
-                String contentAuthZToken = MainPage.Token;
-                String tokenHeaderKey = MainPage.HeaderToken;
-                var customData = tokenHeaderKey + ":" + contentAuthZToken;
-                //licenseRequest.ContentHeader.CustomAttributes = customData;
 
-
-
-                PlayReadyHelpers.ReactiveLicenseAcquisition(licenseRequest,  serviceCompletionNotifier);
+                PlayReadyHelpers.ReactiveLicenseAcquisition(licenseRequest, serviceCompletionNotifier);
                 SetPlaybackEnabled(true);
             }
 
