@@ -27,7 +27,8 @@ namespace SDKTemplate
             new Scenario() { Title="Secure Stop", ClassType=typeof(Scenario4_SecureStop)}
         };
 
-        public static string SampleMovieURL = "https://10.3.2.154/video/xbox/playready_20250214104307/stream.mpd";
+  //      public static string SampleMovieURL = "https://10.3.2.154/video/xbox/playready_20250214104307/stream.mpd";
+        public static string SampleMovieURL = "http://10.0.16.90:8080/stream.mpd";
         public static string HeaderToken = "nv-authorizations";
         public static string Token = "eyJraWQiOiI2MDkwOTUiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIxLjAiLCJ0eXAiOiJDb250ZW50QXV0aFoiLCJqdGkiOiI4YmE1YjhiOS1kYTU1LTQ5MmYtYjhjNC1kNDI1ZWZiNTQ0NDEiLCJjb250ZW50UmlnaHRzIjpbeyJjb250ZW50SWQiOiJDb250ZW50SWQgIzEiLCJlbmNyeXB0aW9uTWV0aG9kIjoiUkFXX0FFU18xMjhfQ1RSX0NFTkMiLCJ1c2FnZVJ1bGVzUHJvZmlsZUlkIjoiVGVzdCIsImRlZmF1bHRLY0lkcyI6WyJmZmZmZmZmZi1hYWFhLWJiYmItMDAwMS0wMDAwMDAwMDAwMDEiXX1dfQ.ba0pXOX3rqXTEJdZZ1vyAdjVrlQ9HB1b1qy7zvwHCPA,eyJrY0lkcyI6WyJmZmZmZmZmZi1hYWFhLWJiYmItMDAwMS0wMDAwMDAwMDAwMDEiXSwidHlwIjoiSldUIiwiZW5jIjoiQTEyOENCQy1IUzI1NiIsImFsZyI6ImRpciIsImtpZCI6IjY4OTM1NCJ9..oFS5ie4LlXsYnydrSEgHOw.GHS4QfhLWetrSmGJl5PLfnx9yf-Rmhv2GuZxhxiQTR8oc80yUMI17KlIWk7hNZnX5QrMCqrZDbm4P-F0SMurDIX43PMutTBflK0msC6oGnbetWiOgBFUG0-RkY2fDMkq9F8wzPdaOLHQwNdvBT9BZDLxraCti72DfIoTUuliNjQ.qluxfXXjMROQLB66eVCcrA";
         public static string LicenceURL = "https://cl11.anycast.nagra.com/PLAYREADY/prls/contentlicenseservice/v1/licenses";
