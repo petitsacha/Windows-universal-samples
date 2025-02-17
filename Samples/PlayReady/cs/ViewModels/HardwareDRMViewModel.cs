@@ -21,7 +21,7 @@ namespace SDKTemplate.ViewModels
     public class HardwareDRMViewModel : ViewModelBase
     {
         private string moviePath = MainPage.SampleMovieURL; // sacha stream URL
-        private string licenseUrl = "http://playready.directtaps.net/pr/svc/rightsmanager.asmx?PlayRight=1&SecurityLevel=2000"; // Sacha license
+        private string licenseUrl = MainPage.LicenceURL; // Sacha license
 
         public RelayCommand CmdUseHardware { get; private set; }
         public RelayCommand CmdUseSoftware { get; private set; }
