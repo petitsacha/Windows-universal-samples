@@ -21,8 +21,8 @@ namespace SDKTemplate
     {
         public Scenario1_ReactiveRequest()
         {
-            this.InitializeComponent();
-            this.DataContext = new ReactiveViewModel(mediaElement);
+            this.InitializeComponent();//SIT comment: this is app entry point
+            this.DataContext = new ReactiveViewModel(mediaElement); 
         }
     }
 }

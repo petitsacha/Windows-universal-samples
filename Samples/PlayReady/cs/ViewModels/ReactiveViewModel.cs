@@ -11,7 +11,13 @@
 
 using SDKTemplate.Shared;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection.PortableExecutable;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Media.Protection;
 using Windows.Media.Protection.PlayReady;
 using Windows.UI.Xaml;
@@ -95,16 +101,73 @@ namespace SDKTemplate.ViewModels
         /// The ServiceCompletion instance will notify the ProtectionManager in the case of queued requests.
         /// </summary>
         MediaProtectionServiceCompletion serviceCompletionNotifier = null;
+        private KeyValuePair<string, object>[] headers;
+
         void ServiceRequested(MediaProtectionManager sender, ServiceRequestedEventArgs srEvent)
         {
             serviceCompletionNotifier = srEvent.Completion;
-            IPlayReadyServiceRequest serviceRequest = (IPlayReadyServiceRequest)srEvent.Request;
+            PlayReadyLicenseAcquisitionServiceRequest serviceRequest = (PlayReadyLicenseAcquisitionServiceRequest)srEvent.Request;
             ViewModelBase.Log(serviceRequest.GetType().Name);
             //Adding custom http header
+            headers = new KeyValuePair<string, object>[] { new KeyValuePair<string, object>(MainPage.HeaderToken, MainPage.Token) };
 
+            serviceRequest.Uri = new Uri(MainPage.LicenceURL);
+            RequestLicenseManual(serviceRequest, headers);
 
-              ProcessServiceRequest(serviceRequest);
+            ProcessServiceRequest(serviceRequest);
         }
+
+        public static  bool RequestLicenseManual(PlayReadyLicenseAcquisitionServiceRequest request, params KeyValuePair<string, object>[] headers)
+        {
+
+            try
+            {
+                var r = request.GenerateManualEnablingChallenge();
+
+                var content = new ByteArrayContent(r.GetMessageBody());
+
+                foreach (var header in r.MessageHeaders.Where(x => x.Value != null))
+                {
+                    if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                    {
+                        content.Headers.ContentType = MediaTypeHeaderValue.Parse(header.Value.ToString());
+                    }
+                    else
+                    {
+                        content.Headers.Add(header.Key, header.Value.ToString());
+                    }
+                }
+
+                var msg = new HttpRequestMessage(HttpMethod.Post, r.Uri) { Content = content };
+
+                foreach (var header in headers)
+                {
+                    msg.Headers.Add(header.Key, header.Value.ToString());
+                }
+
+
+                var client = new HttpClient();
+                var response = client.SendAsync(msg).GetAwaiter().GetResult();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    request.ProcessManualEnablingResponse(response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult());
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
+
+            return true;
+        }
+
 
         /// <summary>
         /// The helper class will determine the exact type of ServiceRequest in order to customize and send
@@ -125,7 +188,7 @@ namespace SDKTemplate.ViewModels
                 var licenseRequest = serviceRequest as PlayReadyLicenseAcquisitionServiceRequest;
                 // The inital service request url was taken from the playready header from the dash manifest.
                 // This can overridden to a different license service prior to sending the request (staging, production,...). 
-                licenseRequest.Uri = new Uri(licenseURL);
+     //           licenseRequest.Uri = new Uri(licenseURL);
 
                 PlayReadyHelpers.ReactiveLicenseAcquisition(licenseRequest, serviceCompletionNotifier);
                 SetPlaybackEnabled(true);

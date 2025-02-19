@@ -1,4 +1,4 @@
-﻿//*********************************************************
+//*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -11,6 +11,10 @@
 
 using SDKTemplate.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using Windows.ApplicationModel.Core;
 using Windows.Media.Protection;
 using Windows.Media.Protection.PlayReady;
@@ -151,7 +155,7 @@ namespace SDKTemplate.Shared
             bool success = false;
             try
             {
-                await licenseRequest.BeginServiceRequest();
+           //     await licenseRequest.BeginServiceRequest();
                 success = true;
             }
             catch (Exception ex)
@@ -204,7 +208,56 @@ namespace SDKTemplate.Shared
             ReactiveLicenseAcquisition(laRequest, null, callback);
         }
 
+        public static bool RequestLicenseManual(PlayReadyLicenseAcquisitionServiceRequest request, params KeyValuePair<string, object>[] headers)
+        {
 
+            try
+            {
+                var r = request.GenerateManualEnablingChallenge();
+
+                var content = new ByteArrayContent(r.GetMessageBody());
+
+                foreach (var header in r.MessageHeaders.Where(x => x.Value != null))
+                {
+                    if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                    {
+                        content.Headers.ContentType = MediaTypeHeaderValue.Parse(header.Value.ToString());
+                    }
+                    else
+                    {
+                        content.Headers.Add(header.Key, header.Value.ToString());
+                    }
+                }
+
+                var msg = new HttpRequestMessage(HttpMethod.Post, r.Uri) { Content = content };
+
+                foreach (var header in headers)
+                {
+                    msg.Headers.Add(header.Key, header.Value.ToString());
+                }
+
+
+                var client = new HttpClient();
+                var response = client.SendAsync(msg).GetAwaiter().GetResult();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    request.ProcessManualEnablingResponse(response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult());
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
+
+            return true;
+        }
 
 
     }
